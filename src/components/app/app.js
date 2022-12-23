@@ -35,43 +35,34 @@ class App extends Component {
 
     addEmployee = (e, form) => {
         e.preventDefault();
-        this.setState(({data}) => {
-            const newData = [...data];
-            newData.push({
-                name: form.state.name, 
-                salary: form.state.salary, 
-                id: this.generateID(), 
-                increase: false,
-                rise: false
+        if (Object.values(form.state).every(item => item.trim() != '')) {
+            this.setState(({data}) => {
+                const newData = [...data];
+                newData.push({
+                    name: form.state.name, 
+                    salary: form.state.salary, 
+                    id: this.generateID(), 
+                    increase: false,
+                    rise: false
+                });
+    
+                return {
+                    data: newData
+                }
             });
-
-            return {
-                data: newData
-            }
-        });
-        form.setState({name: '', salary: ''});
+            form.setState({name: '', salary: ''});
+        }
     }
 
-    onToggleIncrease = (id) => {
+    onToggleProp = (id, prop) => {
         this.setState(({data}) => ({
             data: data.map(item => {
                 if (item.id === id) {
-                    return {...item, increase: !item.increase}
+                    return {...item, [prop]: !item[prop]}
                 }
                 return item;
             })
         }))
-    }
-
-    onToggleRise = (id) => {
-        this.setState(({data}) => ({
-            data: data.map(item => {
-                if (item.id === id) {
-                    return {...item, rise: !item.rise}
-                }
-                return item;
-            })
-        }));
     }
 
     render() {
@@ -91,8 +82,7 @@ class App extends Component {
                 <EmployeesList 
                     data={this.state.data}
                     onDelete={this.deleteItem}
-                    onToggleIncrease={this.onToggleIncrease}
-                    onToggleRise={this.onToggleRise} />
+                    onToggleProp={this.onToggleProp} />
                 <EmployeesAddForm
                 onAdd={this.addEmployee} />
             </div>
