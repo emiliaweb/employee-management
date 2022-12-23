@@ -16,12 +16,17 @@ class App extends Component {
                 {name: 'John Black', salary: 560, increase: false, rise: true, id: 1},
                 {name: 'Maria Green', salary: 1200, increase: true, rise: false, id: 2},
                 {name: 'Kira Nefedova', salary: 1000000, increase: false, rise: false, id: 3}
-            ]
+            ],
+            term: ''
         }
     }
 
     generateID() {
         return Math.random().toString(16).slice(2);
+    }
+
+    onUpdateSearch = (term) => {
+        this.setState({term: term}); // можно сократить до просто {term}
     }
 
     deleteItem = (id) => {
@@ -65,9 +70,22 @@ class App extends Component {
         }))
     }
 
+    searchEmployees = (items, term) => {
+        if (term.length === 0) {
+            return items;
+        }
+
+        return items.filter(item => {
+            return item.name.indexOf(term) > -1;
+        })
+    }
+
     render() {
-        const employees = this.state.data.length;
-        const increased = this.state.data.filter(item => item.increase).length;
+        const {data, term} = this.state;
+        const employees = data.length;
+        const increased = data.filter(item => item.increase).length;
+        const visibleData = this.searchEmployees(data, term);
+
         return (
             <div className="app">
                 <AppInfo 
@@ -75,16 +93,17 @@ class App extends Component {
                 increased={increased} />
     
                 <div className="search-panel">
-                    <SearchPanel/>
+                    <SearchPanel 
+                        onUpdateSearch={this.onUpdateSearch} />
                     <AppFilter/>
                 </div>
 
                 <EmployeesList 
-                    data={this.state.data}
+                    data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp} />
                 <EmployeesAddForm
-                onAdd={this.addEmployee} />
+                    onAdd={this.addEmployee} />
             </div>
         );
     }
