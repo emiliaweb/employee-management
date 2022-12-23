@@ -8,6 +8,9 @@ import EmployeesAddForm from '../employees-add-form/employees-add-form';
 
 import './app.css';
 
+function generateID() {
+    return Math.random().toString(16).slice(2);
+}
 class App extends Component {
     constructor(props) {
         super(props);
@@ -18,12 +21,8 @@ class App extends Component {
                 {name: 'Kira Nefedova', salary: 1000000, increase: false, rise: false, id: 3}
             ],
             term: '',
-            filter: '',
+            filter: 'all',
         }
-    }
-
-    generateID() {
-        return Math.random().toString(16).slice(2);
     }
 
     onUpdateSearch = (term) => {
@@ -47,7 +46,7 @@ class App extends Component {
                 newData.push({
                     name: form.state.name, 
                     salary: form.state.salary, 
-                    id: this.generateID(), 
+                    id: generateID(), 
                     increase: false,
                     rise: false
                 });
@@ -112,6 +111,7 @@ class App extends Component {
                     <SearchPanel 
                         onUpdateSearch={this.onUpdateSearch} />
                     <AppFilter
+                        filter={filter}
                         onUpdateFilter={this.onUpdateFilter} />
                 </div>
 
@@ -127,7 +127,7 @@ class App extends Component {
 }
 
 export default App;
-
+export {generateID};
 
 /* 
 const index = data.findIndex(elem => elem.id === id);

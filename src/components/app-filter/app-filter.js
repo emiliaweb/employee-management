@@ -1,47 +1,45 @@
 import { Component } from 'react';
 
+import { generateID } from '../app/app';
+
 import './app-filter.css';
 
-class AppFilter extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            filter: ''
-        }
-    }
+function AppFilter(props) {
 
-    onUpdateFilter = (e) => {
+    const onUpdateFilter = (e) => {
         e.preventDefault();
-        this.props.onUpdateFilter(e.currentTarget.getAttribute('data-filter'));
+        const currentFilter = e.currentTarget.getAttribute('data-filter');
+        props.onUpdateFilter(currentFilter);
     }
 
-    render() {
+    const buttonsData = [
+        {name: 'all', label: 'Все сотрудники'},
+        {name: 'rise', label: 'На повышение'},
+        {name: 'moreThan1000', label: 'З/п больше 1000'},
+    ]
+
+    const buttons = buttonsData.map(({name, label}) => {
+        const active = props.filter === name;
+        const classes = active ? 'btn-light' : 'btn-outline-light';
+
         return (
-            <div className="btn-group">
-                <button 
-                    className="btn btn-light"
-                    type="button"
-                    data-filter=""
-                    onClick={this.onUpdateFilter}>
-                    Все сотрудники
-                </button>
-                <button 
-                    className="btn btn-outline-light"
-                    type="button"
-                    data-filter="rise"
-                    onClick={this.onUpdateFilter}>
-                    На повышение
-                </button>
-                <button 
-                    className="btn btn-outline-light"
-                    type="button"
-                    data-filter="moreThan1000"
-                    onClick={this.onUpdateFilter}>
-                    З/п больше 1000
-                </button>
-            </div>
-        );
-    }
+            <button 
+                className={`btn ${classes}`}
+                type="button"
+                data-filter={name}
+                onClick={onUpdateFilter}
+                key={generateID()}>
+                {label}
+            </button>
+        )
+    })
+
+    
+    return (
+        <div className="btn-group">
+            {buttons}
+        </div>
+    );
 }
 
 export default AppFilter;
