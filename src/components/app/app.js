@@ -13,9 +13,9 @@ class App extends Component {
         super(props);
         this.state = {
             data: [
-                {name: 'John Black', salary: 560, id: 1},
-                {name: 'Maria Green', salary: 1200, id: 2},
-                {name: 'Kira Nefedova', salary: 1000000, id: 3}
+                {name: 'John Black', salary: 560, increase: false, rise: true, id: 1},
+                {name: 'Maria Green', salary: 1200, increase: true, rise: false, id: 2},
+                {name: 'Kira Nefedova', salary: 1000000, increase: false, rise: false, id: 3}
             ]
         }
     }
@@ -37,7 +37,14 @@ class App extends Component {
         e.preventDefault();
         this.setState(({data}) => {
             const newData = [...data];
-            newData.push({name: form.state.name, salary: form.state.salary, id: this.generateID()});
+            newData.push({
+                name: form.state.name, 
+                salary: form.state.salary, 
+                id: this.generateID(), 
+                increase: false,
+                rise: false
+            });
+
             return {
                 data: newData
             }
@@ -46,17 +53,35 @@ class App extends Component {
     }
 
     onToggleIncrease = (id) => {
-        console.log(id, 'increase');
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, increase: !item.increase}
+                }
+                return item;
+            })
+        }))
     }
 
     onToggleRise = (id) => {
-        console.log(id, 'rise');
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, rise: !item.rise}
+                }
+                return item;
+            })
+        }));
     }
 
     render() {
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
         return (
             <div className="app">
-                <AppInfo/>
+                <AppInfo 
+                employees={employees}
+                increased={increased} />
     
                 <div className="search-panel">
                     <SearchPanel/>
@@ -87,3 +112,15 @@ const after = data.slice(index+1);
 const newData = [...before, ...after];
 
 */
+
+// this.setState(({data}) => {
+//     const index = data.findIndex(elem => elem.id === id);
+
+//     const old = data[index];
+//     const newItem = {...old, increase: !old.increase};
+
+//     const newArr = [...data.slice(0, index), newItem, ...data.slice(index+1)];
+//     return {
+//         data: newArr
+//     }
+// })

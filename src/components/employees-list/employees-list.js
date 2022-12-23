@@ -10,8 +10,8 @@ const EmployeesList = ({data, onDelete, onToggleIncrease, onToggleRise}) => {
             key={id} 
             {...itemProps}
             onDelete={() => onDelete(id)}
-            onToggleIncrease={() => this.onToggleIncrease(id)}
-            onToggleRise={() => this.onToggleRise(id)} /> /* name={item.name} salary={item.salary} */
+            onToggleIncrease={() => onToggleIncrease(id)}
+            onToggleRise={() => onToggleRise(id)} /> /* name={item.name} salary={item.salary} */
         );
     });
 
